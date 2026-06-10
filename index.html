@@ -528,7 +528,7 @@ function buildDatasets(years) {
     ds.push({
       label: cat.label,
       backgroundColor: cat.color,
-      data: years.map(y => cat.y[y] ?? null),
+      data: years.map(y => (typeof y === 'string') ? null : (cat.y[y] ?? null)),
       stack: 'main', borderWidth: 0,
     });
   });
