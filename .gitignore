@@ -1,0 +1,8 @@
+# 只公開 index.html，其餘內部文件不推上 GitHub
+pm/
+assets/
+*.xlsx
+*.csv
+*.json
+*.png
+*.jpg
