@@ -7,17 +7,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --ink:       #17313a;
-      --muted:     #5c6f78;
-      --line:      #d7e1e3;
-      --paper:     #f0f6fa;
+      --ink:       #12313a;
+      --muted:     #617985;
+      --line:      #cfe0e7;
+      --paper:     #eef7fb;
       --panel:     #ffffff;
       --teal:      #009fa8;
       --teal-dark: #007a82;
-      --blue:      #1a5fa8;
-      --red:       #c8001e;
-      --card-head: #d8eaf4;
-      --shadow:    0 2px 10px rgba(20,60,90,0.10);
+      --blue:      #145ba3;
+      --navy:      #0a3f73;
+      --red:       #d9001b;
+      --shadow:    0 2px 7px rgba(32,76,104,0.12);
     }
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -39,109 +39,365 @@
     a { color: inherit; text-decoration: none; }
     :focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
-    /* ── Topbar ── */
-    .topbar {
-      position: sticky; top: 0; z-index: 10;
-      border-bottom: 1px solid rgba(23,49,58,0.14);
-      background: rgba(247,250,249,0.97); backdrop-filter: blur(12px);
+    /* ── ACW site frame ── */
+    .site-header {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
     }
-    .topbar-inner {
-      width: min(1200px,calc(100% - 40px)); margin: 0 auto;
-      min-height: 62px; display: flex; align-items: center;
-      justify-content: space-between; gap: 20px;
+    .utility-bar {
+      background: #f3f8fa;
+      border-bottom: 1px solid #deebef;
+      color: #55707d;
+      font-size: 13px;
+    }
+    .utility-inner,
+    .masthead-inner,
+    .nav-inner,
+    .subnav-inner,
+    .container {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+    .utility-inner {
+      min-height: 34px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+    }
+    .utility-inner a:hover { color: var(--teal-dark); }
+    .masthead-inner {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
     }
     .brand {
       display: flex; align-items: center; gap: 11px;
       font-weight: 800; color: var(--ink);
     }
     .brand-mark {
-      width: 34px; height: 34px; display: grid; place-items: center;
-      border: 2px solid var(--ink); color: var(--teal);
-      font-size: 17px; font-weight: 900; flex-shrink: 0;
+      width: 54px; height: 54px; display: grid; place-items: center;
+      border: 3px solid var(--navy); color: var(--teal);
+      font-size: 20px; font-weight: 900; flex-shrink: 0;
+      letter-spacing: 0;
+      transform: rotate(-5deg);
+    }
+    .brand-title {
+      display: block;
+      font-size: 19px;
+      letter-spacing: 0;
+      color: var(--navy);
+    }
+    .brand-subtitle {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .site-search {
+      display: flex;
+      align-items: stretch;
+      width: min(340px, 38vw);
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .site-search input {
+      min-width: 0;
+      flex: 1;
+      border: 0;
+      padding: 9px 11px;
+      font: inherit;
+      color: var(--ink);
+    }
+    .site-search button {
+      border: 0;
+      border-left: 1px solid var(--line);
+      padding: 0 14px;
+      color: #fff;
+      background: var(--teal-dark);
+      font: inherit;
+      font-weight: 800;
     }
     .nav-list {
       display: flex; align-items: center; gap: 14px;
       list-style: none; margin: 0; padding: 0;
     }
-    .nav-list a { color: var(--muted); font-size: 14px; padding-bottom: 1px; }
-    .nav-list a:hover { color: var(--teal); }
+    .site-nav {
+      background: linear-gradient(90deg, #007f8b 0%, #0a6aa1 100%);
+      color: #fff;
+    }
+    .site-nav .nav-list {
+      min-height: 48px;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .nav-list a {
+      display: block;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .nav-list a:hover,
     .nav-list a[aria-current="page"] {
-      color: var(--blue); font-weight: 700;
-      border-bottom: 2px solid var(--blue);
+      color: #fff;
+      background: rgba(255,255,255,0.16);
+    }
+    .section-title-band {
+      background: #e6f2f6;
+      border-bottom: 1px solid var(--line);
+    }
+    .subnav-inner {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 94px;
+    }
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      font-size: clamp(24px, 3vw, 34px);
+      color: var(--navy);
+      font-weight: 900;
+    }
+    .sub-tabs {
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .sub-tabs a {
+      display: block;
+      min-width: 122px;
+      padding: 13px 18px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      background: #fff;
+      color: #45636e;
+      font-weight: 800;
+    }
+    .sub-tabs a[aria-current="page"] {
+      color: #fff;
+      border-color: var(--teal-dark);
+      background: var(--teal-dark);
     }
 
     /* ── Layout ── */
-    .container { width: min(1200px,calc(100% - 40px)); margin: 0 auto; }
+    .content-shell {
+      padding: 30px 0 54px;
+    }
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+      color: #607985;
+      font-size: 13px;
+    }
+    .breadcrumb a { color: var(--teal-dark); }
+    .breadcrumb span::before {
+      content: ">";
+      margin-right: 8px;
+      color: #91a6af;
+    }
 
     /* ── Page header ── */
     .page-header {
-      padding: 32px 0 20px;
+      padding: 0 0 24px;
       display: flex; align-items: flex-end; justify-content: space-between;
       gap: 16px; flex-wrap: wrap;
     }
     .page-header h1 {
-      margin: 0; font-size: clamp(26px,3.5vw,40px);
-      font-weight: 900; color: var(--blue);
+      margin: 0; font-size: clamp(28px,3.3vw,42px);
+      font-weight: 900; color: var(--navy);
+      letter-spacing: 0;
     }
     .source-tag {
       font-size: 12px; color: var(--muted);
-      padding: 5px 10px; border: 1px solid var(--line); background: #fff;
+      padding: 7px 12px; border: 1px solid var(--line); background: #fff;
+    }
+    .intro-note {
+      width: min(720px, 100%);
+      margin: -10px 0 26px;
+      color: #526c77;
+      line-height: 1.75;
     }
 
     /* ── Card grid ── */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      padding-bottom: 48px;
+      gap: 18px;
+      padding: 4px 0 48px;
     }
 
     .metric-card {
-      background: var(--panel);
-      border: 1px solid #c8dcea;
-      box-shadow: var(--shadow);
-      display: flex; flex-direction: column;
+      --card-accent: var(--teal-dark);
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #d0e0e8;
+      box-shadow: 0 3px 10px rgba(23,63,95,0.09);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 214px;
+      transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--card-accent);
+    }
+    .metric-card:hover {
+      transform: translateY(-1px);
+      border-color: #a9cbd9;
+      box-shadow: 0 10px 22px rgba(23,63,95,0.14);
     }
     .metric-card:focus-within { outline: 3px solid var(--teal); }
 
     .card-head {
-      background: var(--card-head);
-      padding: 10px 14px;
-      font-weight: 700; font-size: 14px;
-      text-align: center;
-      border-bottom: 1px solid #b8d4e8;
+      min-height: 66px;
+      padding: 15px 17px 12px 20px;
+      border-bottom: 1px solid #edf3f6;
       color: var(--ink);
+      display: grid;
+      gap: 7px;
+    }
+    .card-kicker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+    }
+    .card-index {
+      color: var(--card-accent);
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .card-badge {
+      padding: 3px 8px;
+      border: 1px solid rgba(18,49,58,0.1);
+      background: #f5fafc;
+      color: #4c6570;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.35;
+      color: #163f58;
+      text-wrap: pretty;
     }
 
     .card-body {
-      padding: 13px 14px 14px;
-      flex: 1; display: flex; flex-direction: column;
-      gap: 3px; position: relative;
+      padding: 15px 17px 10px 20px;
+      display: grid;
+      gap: 10px;
+      position: relative;
     }
 
-    .card-year { font-size: 13px; font-weight: 600; color: #333; }
-    .card-type { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .card-meta-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #6b818b;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .card-year {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .card-type { color: #6b818b; }
+    .card-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+    }
 
     .card-value {
-      font-size: clamp(22px, 2.6vw, 30px);
-      font-weight: 700; color: var(--blue); line-height: 1.1;
+      font-size: clamp(30px, 3vw, 39px);
+      font-weight: 900;
+      color: var(--blue);
+      line-height: 1;
+      letter-spacing: 0;
     }
-    .card-unit { font-size: 12px; color: var(--muted); }
+    .card-unit {
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
 
     .card-growth-wrap {
-      position: absolute; right: 14px; top: 13px;
       text-align: right;
+      padding-bottom: 2px;
     }
     .card-growth {
       display: flex; align-items: center; gap: 3px;
-      font-size: clamp(16px,2vw,22px); font-weight: 700;
+      font-size: clamp(18px,2vw,24px);
+      font-weight: 900;
       color: var(--red); justify-content: flex-end;
+      line-height: 1;
     }
     .card-growth .arrow { font-size: 0.7em; }
-    .card-compare { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .card-compare {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+    }
 
-    .card-spark {
-      position: absolute; right: 12px; bottom: 12px;
+    .card-foot {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 14px;
+      padding: 11px 17px 13px 20px;
+      background: #f7fbfd;
+      border-top: 1px solid #edf3f6;
+    }
+    .card-context {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      color: #607985;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .card-context strong {
+      color: #183d4a;
+      font-weight: 900;
+    }
+    .card-spark-label {
+      color: #78909a;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: right;
+      margin-bottom: 4px;
+    }
+    .card-spark svg {
+      display: block;
     }
 
     /* ── Section divider ── */
@@ -153,26 +409,120 @@
       display: flex; align-items: flex-end; justify-content: space-between;
       gap: 20px; margin-bottom: 26px; flex-wrap: wrap;
     }
-    h2 { margin: 0; font-size: clamp(22px,3vw,36px); font-weight: 900; }
+    h2 { margin: 0; font-size: clamp(24px,3vw,34px); font-weight: 900; color: var(--navy); }
     .sec-note { color: var(--muted); font-size: 14px; line-height: 1.65; max-width: 500px; margin: 0; }
-
-    /* Chart toggle btn */
-    .chart-toggle {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 16px; background: var(--panel);
-      border: 2px solid var(--line); color: var(--ink);
-      font-size: 13px; font-weight: 700;
-      cursor: pointer; font-family: inherit; white-space: nowrap;
+    .range-tabs {
+      display: inline-flex;
+      gap: 0;
+      border: 1px solid var(--line);
+      background: #fff;
     }
-    .chart-toggle:hover { border-color: var(--teal); color: var(--teal); }
-    .chart-toggle[aria-pressed="true"] {
-      background: var(--teal); color: #fff; border-color: var(--teal);
+    .range-btn {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: #fff;
+      color: #526c77;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
     }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .range-btn:last-child { border-right: 0; }
+    .range-btn:hover { color: var(--teal-dark); background: #f3fafb; }
+    .range-btn[aria-pressed="true"] {
+      color: #fff;
+      background: var(--teal-dark);
+    }
 
     /* Chart */
-    .chart-box { background: var(--panel); border: 1px solid rgba(23,49,58,0.1); padding: 22px; }
-    .chart-canvas-wrap { position: relative; height: 420px; }
+    .trend-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      background: var(--panel);
+      border: 1px solid #d8e5eb;
+      box-shadow: var(--shadow);
+    }
+    .trend-main {
+      padding: 26px 26px 22px;
+      border-right: 1px solid #dce9ef;
+    }
+    .trend-aside {
+      padding: 24px 22px;
+      background: linear-gradient(180deg, #f8fcfd 0%, #eef7fa 100%);
+    }
+    .chart-title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--teal-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+    .chart-title-row h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.3;
+    }
+    .chart-measure {
+      min-width: 128px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .chart-measure strong {
+      display: block;
+      color: var(--blue);
+      font-size: 26px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+    .chart-canvas-wrap { position: relative; height: 390px; }
+
+    .share-title {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .share-total {
+      margin: -4px 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .share-list {
+      display: grid;
+      gap: 10px;
+    }
+    .share-item {
+      display: grid;
+      gap: 5px;
+    }
+    .share-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #3d5964;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .share-track {
+      height: 7px;
+      overflow: hidden;
+      background: #dbe9ef;
+    }
+    .share-fill {
+      height: 100%;
+    }
 
     /* Legend */
     .legend {
@@ -216,36 +566,158 @@
     .na { color: #bbb; }
 
     /* Footer */
-    footer {
-      margin-top: 24px; padding: 24px 0 48px;
-      border-top: 1px solid rgba(23,49,58,0.1);
-      font-size: 13px; color: var(--muted); line-height: 1.75;
+    .return-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 34px 0 0;
     }
-    footer p { margin: 0 0 5px; }
+    .return-actions a {
+      min-width: 104px;
+      padding: 9px 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #536e78;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .return-actions a:hover {
+      border-color: var(--teal-dark);
+      color: var(--teal-dark);
+    }
+    footer {
+      background: #0c3d54;
+      color: rgba(255,255,255,0.82);
+      font-size: 13px; line-height: 1.75;
+    }
+    .footer-inner {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 26px;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 1fr;
+      gap: 30px;
+    }
+    footer h3 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 16px;
+    }
+    footer p,
+    footer ul { margin: 0; }
+    footer ul {
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 5px;
+    }
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding: 14px 0 24px;
+      color: rgba(255,255,255,0.68);
+      font-size: 12px;
+    }
 
     /* Responsive */
     @media (max-width: 900px) {
       .card-grid { grid-template-columns: repeat(2, 1fr); }
+      .metric-card { min-height: 208px; }
+      .trend-board { grid-template-columns: 1fr; }
+      .trend-main { border-right: 0; border-bottom: 1px solid #dce9ef; }
+      .masthead-inner, .subnav-inner { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .site-search { width: 100%; }
+      .footer-inner { grid-template-columns: 1fr; }
     }
     @media (max-width: 580px) {
-      .topbar-inner, .container { width: calc(100% - 20px); }
-      .nav-list { display: none; }
-      .card-grid { grid-template-columns: 1fr; }
+      .utility-inner, .masthead-inner, .nav-inner, .subnav-inner, .container, .footer-inner { width: calc(100% - 24px); }
+      .utility-inner { justify-content: flex-start; gap: 12px; overflow-x: auto; }
+      .brand-title { font-size: 17px; }
+      .sub-tabs { width: 100%; overflow-x: auto; }
+      .sub-tabs a { min-width: 112px; }
+      .card-grid { grid-template-columns: 1fr; gap: 14px; }
+      .metric-card { min-height: auto; }
+      .card-head,
+      .card-body,
+      .card-foot { padding-left: 18px; padding-right: 14px; }
+      .card-foot { grid-template-columns: 1fr; align-items: start; }
+      .card-spark-label { text-align: left; }
+      .trend-main, .trend-aside { padding: 18px 14px; }
+      .chart-title-row { display: block; }
+      .chart-measure { margin-top: 10px; text-align: left; }
       .chart-canvas-wrap { height: 280px; }
     }
   </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">跳到主要內容區塊</a>
 
+<header class="site-header" role="banner">
+  <div class="utility-bar">
+    <div class="utility-inner">
+      <a href="#">Taiwan Cyber Security Introduction</a>
+      <a href="#">網站導覽</a>
+      <a href="#">聯絡我們</a>
+    </div>
+  </div>
 
-<main id="main-content">
+  <div class="masthead-inner">
+    <a class="brand" href="#" aria-label="資安產業跨域聯防推動計畫網站 ACW">
+      <span class="brand-mark" aria-hidden="true">資</span>
+      <span>
+        <span class="brand-title">資安產業跨域聯防推動計畫網站 ACW</span>
+        <span class="brand-subtitle">Taiwan Cyber Security Industry Portal</span>
+      </span>
+    </a>
+    <form class="site-search" role="search" aria-label="關鍵字全站搜尋">
+      <input type="search" placeholder="關鍵字全站搜尋" aria-label="關鍵字">
+      <button type="submit">搜尋</button>
+    </form>
+  </div>
+
+  <nav class="site-nav" aria-label="全站主選單">
+    <div class="nav-inner">
+      <ul class="nav-list">
+        <li><a href="#">最新消息</a></li>
+        <li><a href="#" aria-current="page">產業資料庫</a></li>
+        <li><a href="#">標準驗證</a></li>
+        <li><a href="#">找資安</a></li>
+        <li><a href="#">做資安</a></li>
+        <li><a href="#">學資安</a></li>
+        <li><a href="#">沙崙基地</a></li>
+        <li><a href="#">關於我們</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="section-title-band">
+    <div class="subnav-inner">
+      <div class="section-kicker">產業資料庫</div>
+      <ul class="sub-tabs" aria-label="產業資料庫分類">
+        <li><a href="#">產業地圖</a></li>
+        <li><a href="#">廠商類別</a></li>
+        <li><a href="#" aria-current="page">數據資料庫</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main id="main-content" class="content-shell">
   <div class="container">
+    <nav class="breadcrumb" aria-label="麵包屑">
+      <a href="#">首頁</a>
+      <span><a href="#">產業資料庫</a></span>
+      <span aria-current="page">數據資料庫</span>
+    </nav>
 
     <!-- Page header -->
     <div class="page-header">
       <h1>數據資料庫</h1>
       <span class="source-tag">資料來源：工研院產科國際所｜更新：115年6月</span>
     </div>
+    <p class="intro-note">
+      本頁整理臺灣資安產業主要指標、細項產值與年度趨勢。版型依 ACW 產業資料庫內頁規格整理，保留資料卡快速瀏覽，並提供趨勢圖與資料表供後續維護。
+    </p>
 
     <!-- ===== Metric Cards ===== -->
     <section aria-labelledby="cards-heading">
@@ -262,28 +734,45 @@
           <p class="sec-note">
             註一 2016–2025 年為實績。<br>
             註二 細項分類完整涵蓋 2017–2025 年。<br>
-            註三 2026e 為本年度估計值，2027f / 2028f 為預測值。
+            註三 可切換查看 2026 預測值與 2027 展望值。
           </p>
         </div>
-        <button class="chart-toggle" id="ef-chart-btn"
-          aria-pressed="false" onclick="toggleEFChart()">
-          <span class="dot" aria-hidden="true"></span>
-          顯示2026年估計值及2027及2028年預測值
-        </button>
+        <div class="range-tabs" aria-label="趨勢圖時間範圍">
+          <button class="range-btn" type="button" data-range="actual" aria-pressed="true">實績 2016-2025</button>
+          <button class="range-btn" type="button" data-range="forecast2026" aria-pressed="false">含 2026 預測</button>
+          <button class="range-btn" type="button" data-range="outlook2027" aria-pressed="false">含 2027 展望</button>
+        </div>
       </div>
 
-      <div class="chart-box">
-        <div class="chart-canvas-wrap">
-          <canvas id="trendChart" role="img"
-            aria-label="臺灣資安產業產值趨勢堆疊長條圖，詳細數據請見下方資料表"></canvas>
+      <div class="trend-board">
+        <div class="trend-main">
+          <div class="chart-title-row">
+            <div>
+              <p class="eyebrow">Market Trend</p>
+              <h3 id="trend-chart-title">2016-2025 台灣資安產業產值趨勢</h3>
+            </div>
+            <div class="chart-measure">
+              <strong>912.4億</strong>
+              <span>2025 年實績</span>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="trendChart" role="img"
+              aria-label="臺灣資安產業產值趨勢圖，可點選年度查看右側產值結構"></canvas>
+          </div>
+          <ul class="legend" id="chart-legend" aria-label="圖例"></ul>
+          <div class="chart-note" role="note">
+            <span><span class="badge badge-act">實績</span> 已確認數值</span>
+            <span><span class="badge badge-est">e</span> 估計值（Estimate）</span>
+            <span><span class="badge badge-fct">f</span> 預測值（Forecast）</span>
+            <span>圖中數字單位為億元新台幣。</span>
+          </div>
         </div>
-        <ul class="legend" id="chart-legend" aria-label="圖例"></ul>
-        <div class="chart-note" role="note">
-          <span><span class="badge badge-act">實績</span> 已確認數值</span>
-          <span><span class="badge badge-est">e</span> 估計值（Estimate）</span>
-          <span><span class="badge badge-fct">f</span> 預測值（Forecast）</span>
-          <span>2016 年僅有整體產值，無細項分類。</span>
-        </div>
+        <aside class="trend-aside" aria-label="趨勢摘要">
+          <p class="share-title" id="segment-share-title">2025 產值結構</p>
+          <p class="share-total" id="segment-share-total">總產值 912.4 億元</p>
+          <div class="share-list" id="segment-share-list"></div>
+        </aside>
       </div>
 
       <button class="table-btn" id="table-toggle-btn"
@@ -314,13 +803,39 @@
       </div>
     </div>
 
+    <div class="return-actions" aria-label="頁面導覽">
+      <a href="#">回上頁</a>
+      <a href="#">回首頁</a>
+    </div>
+
   </div>
 </main>
 
 <footer>
-  <div class="container">
-    <p>資料來源：工研院產科國際所資安產業調查｜最近更新：115年6月</p>
-    <p>2025 年（含）以前為實績值；2026 年標示「e」為估計值；2027 年起標示「f」為預測值。引用請標示來源。</p>
+  <div class="footer-inner">
+    <section>
+      <h3>資安產業跨域聯防推動計畫</h3>
+      <p>02-2311-6228 分機 210</p>
+      <p>聯絡我們 Contact Us</p>
+    </section>
+    <section>
+      <h3>產業資料庫</h3>
+      <ul>
+        <li><a href="#">產業地圖</a></li>
+        <li><a href="#">廠商類別</a></li>
+        <li><a href="#">數據資料庫</a></li>
+      </ul>
+    </section>
+    <section>
+      <h3>資料註記</h3>
+      <p>資料來源：工研院產科國際所資安產業調查。</p>
+      <p>2025 年以前為實績值；2026 年標示「e」為估計值；2027 年起標示「f」為預測值。</p>
+    </section>
+  </div>
+  <div class="copyright">
+    <div class="container">
+      資安產業跨域聯防推動計畫 版權所有 © 2025。本頁為 ACW 數據資料庫替換版型 prototype。
+    </div>
   </div>
 </footer>
 
@@ -338,7 +853,6 @@
 //  資料（來源：手動填表.xlsx，115年6月）
 // ═══════════════════════════════════════════════
 
-// 卡片指標定義
 const METRICS = [
   {
     title: '資安產值',
@@ -402,58 +916,52 @@ const METRICS = [
   },
 ];
 
-// 趨勢圖細項資料（億元）
 const CATS = [
   { label:'終端與行動裝置防護', color:'#F6B30B',
     y:{2017:84.76,2018:95.94,2019:108.26,2020:120.93,2021:131.05,2022:144.13,2023:151.91,2024:164.95,
-       2025:177.77,'2026e':194.65,'2027f':209.86,'2028f':220.35}},
+       2025:177.77,'2026e':194.65,'2027f':209.86}},
   { label:'網路安全防護', color:'#4CAF50',
     y:{2017:115.94,2018:124.52,2019:139.55,2020:156.85,2021:172.43,2022:217.11,2023:229.05,2024:242.52,
-       2025:263.14,'2026e':281.56,'2027f':301.04,'2028f':315.10}},
+       2025:263.14,'2026e':281.56,'2027f':301.04}},
   { label:'資料與雲端應用安全', color:'#E05A4B',
     y:{2017:23.59,2018:24.60,2019:26.51,2020:30.35,2021:31.61,2022:36.34,2023:38.74,2024:45.04,
-       2025:50.88,'2026e':57.49,'2027f':64.71,'2028f':72.68}},
+       2025:50.88,'2026e':57.49,'2027f':64.71}},
   { label:'物聯網安全防護', color:'#C879C8',
     y:{2017:16.53,2018:18.12,2019:20.03,2020:22.27,2021:25.85,2022:33.59,2023:40.62,2024:50.64,
-       2025:62.62,'2026e':73.46,'2027f':84.71,'2028f':95.96}},
+       2025:62.62,'2026e':73.46,'2027f':84.71}},
   { label:'資安營運管理服務', color:'#245B93',
     y:{2017:41.30,2018:45.00,2019:50.32,2020:58.02,2021:63.32,2022:69.63,2023:81.39,2024:93.49,
-       2025:107.31,'2026e':121.32,'2027f':136.26,'2028f':153.38}},
+       2025:107.31,'2026e':121.32,'2027f':136.26}},
   { label:'資安檢測鑑識顧問服務', color:'#2E7D52',
     y:{2017:50.34,2018:54.99,2019:61.72,2020:69.50,2021:76.18,2022:78.16,2023:86.76,2024:98.45,
-       2025:110.56,'2026e':124.00,'2027f':138.61,'2028f':157.69}},
+       2025:110.56,'2026e':124.00,'2027f':138.61}},
   { label:'資安系統整合建置服務', color:'#B5CE45',
     y:{2017:58.45,2018:73.52,2019:83.76,2020:90.41,2021:99.13,2022:104.49,2023:111.71,2024:117.93,
-       2025:134.72,'2026e':143.41,'2027f':156.04,'2028f':166.99}},
+       2025:134.72,'2026e':143.41,'2027f':156.04}},
   { label:'資安教育保險', color:'#7E4A24',
     y:{2017:2.63,2018:2.75,2019:3.30,2020:3.68,2021:3.98,2022:4.83,2023:5.14,2024:5.27,
-       2025:5.40,'2026e':5.58,'2027f':5.89,'2028f':6.11}},
+       2025:5.40,'2026e':5.58,'2027f':5.89}},
 ];
 
 const TOTAL = {
   2016:351.76,2017:393.54,2018:439.44,2019:493.45,
   2020:552.01,2021:603.55,2022:688.28,2023:745.35,
   2024:818.33,2025:912.40,
-  '2026e':1001.47,'2027f':1097.12,'2028f':1188.26
+  '2026e':1001.47,'2027f':1097.12
 };
 const VENDORS = {
   2016:196,2017:294,2018:303,2019:324,2020:340,
   2021:350,2022:360,2023:363,2024:368,2025:406
 };
 const NO_BREAK = new Set([2016]);
-const EF = [
-  {year:'2026e',label:'2026e 估計值',value:1001.47,bg:'rgba(0,159,168,0.50)',border:'#009fa8'},
-  {year:'2027f',label:'2027f 預測值',value:1097.12,bg:'rgba(36,91,147,0.45)',border:'#245B93'},
-  {year:'2028f',label:'2028f 預測值',value:1188.26,bg:'rgba(36,91,147,0.28)',border:'#3a7abf'},
-];
 const BASE_YEARS = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
 
 // ═══════════════════════════════════════════════
 //  卡片 Sparkline（SVG 小型柱狀圖）
 // ═══════════════════════════════════════════════
 
-function makeSpark(data) {
-  const W = 72, H = 34, BAR_W = 6, GAP = 2;
+function makeSpark(data, accent = '#145ba3') {
+  const W = 78, H = 34, BAR_W = 6, GAP = 2;
   const n = data.length;
   const min = 0;
   const max = Math.max(...data);
@@ -466,7 +974,7 @@ function makeSpark(data) {
     const isLast = i === n - 1;
     return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}"
       width="${BAR_W}" height="${h.toFixed(1)}"
-      fill="${isLast ? '#1a5fa8' : '#90bfdf'}" rx="1"/>`;
+      fill="${isLast ? accent : '#9bc8df'}" rx="1"/>`;
   }).join('');
 
   return `<svg width="${W}" height="${H}" aria-hidden="true"
@@ -477,35 +985,93 @@ function makeSpark(data) {
 //  卡片渲染
 // ═══════════════════════════════════════════════
 
+const CARD_ACCENTS = [
+  '#145ba3',
+  '#007a82',
+  '#D38900',
+  '#4CAF50',
+  '#E05A4B',
+  '#C879C8',
+  '#245B93',
+  '#2E7D52',
+  '#B5CE45',
+  '#7E4A24',
+];
+const TOTAL_2025_METRIC_VALUE = METRICS[0].val25;
+
+function formatBaseline(m) {
+  return m.unit === '家'
+    ? `${m.val24.toLocaleString('zh-TW')} 家`
+    : `${m.val24.toLocaleString('zh-TW')} 百萬元`;
+}
+
+function metricContextLine(m, idx) {
+  if (idx === 0) {
+    return `折合 <strong>${(m.val25 / 100).toLocaleString('zh-TW', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    })} 億元</strong>`;
+  }
+  if (idx === 1) {
+    const diff = m.val25 - m.val24;
+    return `年增 <strong>${diff >= 0 ? '+' : ''}${diff.toLocaleString('zh-TW')} 家</strong>`;
+  }
+  const share = (m.val25 / TOTAL_2025_METRIC_VALUE * 100).toFixed(1);
+  return `占總產值 <strong>${share}%</strong>`;
+}
+
 function renderCards() {
   const grid = document.getElementById('metric-card-grid');
   grid.innerHTML = METRICS.map((m, idx) => {
     const growth = ((m.val25 - m.val24) / m.val24 * 100);
     const growthStr = growth.toFixed(1);
     const fmtVal = m.val25.toLocaleString('zh-TW');
-    const spark = makeSpark(m.spark);
+    const accent = CARD_ACCENTS[idx % CARD_ACCENTS.length];
+    const spark = makeSpark(m.spark, accent);
     const cardId = `metric-card-${idx}`;
+    const badge = idx < 2 ? '總覽' : '細項產值';
+    const metricNo = String(idx + 1).padStart(2, '0');
 
-    return `<article class="metric-card" role="listitem" aria-labelledby="${cardId}-title">
-      <div class="card-head" id="${cardId}-title">${m.title}</div>
+    return `<article class="metric-card" style="--card-accent:${accent}" role="listitem" aria-labelledby="${cardId}-title">
+      <div class="card-head">
+        <div class="card-kicker-row">
+          <span class="card-index">指標 ${metricNo}</span>
+          <span class="card-badge">${badge}</span>
+        </div>
+        <div class="card-title" id="${cardId}-title">${m.title}</div>
+      </div>
       <div class="card-body">
-        <div class="card-year">2025</div>
-        <div class="card-type">${m.type}</div>
-        <div class="card-value" aria-label="${fmtVal} ${m.unit}">
-          ${fmtVal}
+        <div class="card-meta-line">
+          <span class="card-year">2025</span>
+          <span class="card-type">${m.type}</span>
         </div>
-        <div class="card-unit">${m.unit}</div>
-
-        <div class="card-growth-wrap"
-          aria-label="年增率 ${growth >= 0 ? '＋' : ''}${growthStr}%，相較2024年">
-          <div class="card-growth">
-            <span class="arrow" aria-hidden="true">${growth >= 0 ? '▲' : '▼'}</span>
-            <span>${growthStr}%</span>
+        <div class="card-main">
+          <div>
+            <div class="card-value" aria-label="${fmtVal} ${m.unit}">
+              ${fmtVal}
+            </div>
+            <div class="card-unit">${m.unit}</div>
           </div>
-          <div class="card-compare">上期比較</div>
-        </div>
 
-        <div class="card-spark" aria-hidden="true">${spark}</div>
+          <div class="card-growth-wrap"
+            aria-label="年增率 ${growth >= 0 ? '＋' : ''}${growthStr}%，相較2024年">
+            <div class="card-growth">
+              <span class="arrow" aria-hidden="true">${growth >= 0 ? '▲' : '▼'}</span>
+              <span>${growth >= 0 ? '+' : ''}${growthStr}%</span>
+            </div>
+            <div class="card-compare">相較 2024</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-foot">
+        <div class="card-context">
+          <span>2024 基準 <strong>${formatBaseline(m)}</strong></span>
+          <span>${metricContextLine(m, idx)}</span>
+        </div>
+        <div>
+          <div class="card-spark-label">9 年趨勢</div>
+          <div class="card-spark" aria-hidden="true">${spark}</div>
+        </div>
       </div>
     </article>`;
   }).join('');
@@ -515,40 +1081,88 @@ function renderCards() {
 //  趨勢圖
 // ═══════════════════════════════════════════════
 
-let showEF = false;
+const RANGE_CONFIG = {
+  actual: {
+    years: [...BASE_YEARS],
+    title: '2016-2025 台灣資安產業產值趨勢',
+    measureYear: 2025,
+    measureLabel: '2025 年實績',
+  },
+  forecast2026: {
+    years: [...BASE_YEARS, '2026e'],
+    title: '2016-2026 台灣資安產業產值趨勢',
+    measureYear: '2026e',
+    measureLabel: '2026 年預測值',
+  },
+  outlook2027: {
+    years: [...BASE_YEARS, '2026e', '2027f'],
+    title: '2016-2027 台灣資安產業產值趨勢',
+    measureYear: '2027f',
+    measureLabel: '2027 年展望值',
+  },
+};
+let activeRange = 'actual';
+let selectedYear = 2025;
 let trendChart = null;
 
 function getYears() {
-  return showEF ? [...BASE_YEARS,'2026e','2027f','2028f'] : [...BASE_YEARS];
+  return RANGE_CONFIG[activeRange].years;
+}
+
+function displayYear(year) {
+  if (year === '2026e') return '2026';
+  if (year === '2027f') return '2027';
+  return String(year);
+}
+
+function displayTableYear(year) {
+  if (year === '2026e') return '2026 預測';
+  if (year === '2027f') return '2027 展望';
+  return String(year);
+}
+
+function getSuggestedMax(years) {
+  return Math.ceil(Math.max(...years.map(y => TOTAL[y] ?? 0)) / 100) * 100 + 100;
 }
 
 function buildDatasets(years) {
-  const ds = [];
-  CATS.forEach(cat => {
-    ds.push({
-      label: cat.label,
-      backgroundColor: cat.color,
-      data: years.map(y => (typeof y === 'string') ? null : (cat.y[y] ?? null)),
-      stack: 'main', borderWidth: 0,
-    });
-  });
-  ds.push({
-    label: '整體產值（2016，無細項）',
-    backgroundColor: '#009fa8',
-    data: years.map(y => NO_BREAK.has(y) ? TOTAL[y] : null),
-    stack: 'main', borderWidth: 0,
-  });
-  EF.forEach(ef => {
-    ds.push({
-      label: ef.label,
-      backgroundColor: ef.bg,
-      borderColor: ef.border,
-      borderWidth: 2,
-      data: years.map(y => y === ef.year ? ef.value : null),
-      stack: 'main',
-    });
-  });
-  return ds;
+  const values = years.map(y => TOTAL[y] ?? null);
+  return [
+    {
+      type: 'bar',
+      label: '總產值',
+      data: values,
+      backgroundColor: years.map(y => {
+        if (y === selectedYear) return '#145ba3';
+        return typeof y === 'string' ? 'rgba(238, 122, 43, 0.38)' : '#0aa2a8';
+      }),
+      borderColor: years.map(y => {
+        if (y === selectedYear) return '#0a3f73';
+        return typeof y === 'string' ? '#ee7a2b' : '#087f8b';
+      }),
+      borderWidth: 1.5,
+      borderRadius: { topLeft: 5, topRight: 5 },
+      categoryPercentage: 0.68,
+      barPercentage: 0.82,
+      maxBarThickness: 48,
+      order: 2,
+    },
+    {
+      type: 'line',
+      label: '成長走勢',
+      data: values,
+      borderColor: '#0a3f73',
+      backgroundColor: 'transparent',
+      tension: 0.32,
+      pointRadius: years.map(y => y === selectedYear ? 4 : 2),
+      pointHoverRadius: 5,
+      pointBackgroundColor: '#ffffff',
+      pointBorderColor: '#0a3f73',
+      pointBorderWidth: 2,
+      borderWidth: 2.2,
+      order: 1,
+    },
+  ];
 }
 
 function initChart() {
@@ -556,9 +1170,15 @@ function initChart() {
   const years = getYears();
   trendChart = new Chart(ctx, {
     type: 'bar',
-    data: { labels: years.map(String), datasets: buildDatasets(years) },
+    data: { labels: years.map(displayYear), datasets: buildDatasets(years) },
     options: {
       responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      onClick: (_, elements) => {
+        if (!elements.length) return;
+        selectedYear = getYears()[elements[0].index];
+        updateTrendChart();
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -571,27 +1191,32 @@ function initChart() {
       },
       scales: {
         x: {
-          stacked: true,
+          stacked: false,
           grid: { display: false },
           ticks: { font: { size: 12, family: '"Noto Sans TC","Microsoft JhengHei",sans-serif' } },
         },
         y: {
-          stacked: true, beginAtZero: true,
+          stacked: false, beginAtZero: true,
+          suggestedMax: getSuggestedMax(years),
+          grid: { color: 'rgba(18,49,58,0.10)' },
           title: { display: true, text: '億元新台幣', font: { size: 12 }, color: '#5c6f78' },
           ticks: { font: { size: 11 }, callback: v => v.toLocaleString('zh-TW') },
         },
       },
     },
   });
+  setupRangeControls();
+  updateTrendMeta();
   renderLegend();
+  renderSegmentShare();
   renderTable();
 }
 
 function renderLegend() {
   const items = [
-    ...CATS,
-    { label: '整體產值（2016，無細項）', color: '#009fa8' },
-    ...(showEF ? EF.map(ef => ({ label: ef.label, color: ef.border })) : []),
+    { label: '實績總產值', color: '#0aa2a8' },
+    { label: '選取年份', color: '#145ba3' },
+    ...(activeRange !== 'actual' ? [{ label: '預測 / 展望值', color: '#ee7a2b' }] : []),
   ];
   document.getElementById('chart-legend').innerHTML = items.map(c =>
     `<li>
@@ -601,16 +1226,78 @@ function renderLegend() {
   ).join('');
 }
 
-function toggleEFChart() {
-  showEF = !showEF;
-  const btn = document.getElementById('ef-chart-btn');
-  btn.setAttribute('aria-pressed', String(showEF));
+function setupRangeControls() {
+  document.querySelectorAll('.range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeRange = btn.dataset.range;
+      const years = getYears();
+      selectedYear = years[years.length - 1];
+      document.querySelectorAll('.range-btn').forEach(item => {
+        item.setAttribute('aria-pressed', String(item === btn));
+      });
+      updateTrendChart();
+    });
+  });
+}
+
+function updateTrendMeta() {
+  const config = RANGE_CONFIG[activeRange];
+  document.getElementById('trend-chart-title').textContent = config.title;
+  const measure = document.querySelector('.chart-measure');
+  measure.querySelector('strong').textContent = `${TOTAL[config.measureYear].toFixed(1)}億`;
+  measure.querySelector('span').textContent = config.measureLabel;
+}
+
+function updateTrendChart() {
   const years = getYears();
-  trendChart.data.labels = years.map(String);
+  trendChart.data.labels = years.map(displayYear);
   trendChart.data.datasets = buildDatasets(years);
+  trendChart.options.scales.y.suggestedMax = getSuggestedMax(years);
   trendChart.update();
+  updateTrendMeta();
   renderLegend();
+  renderSegmentShare();
   renderTable();
+}
+
+function renderSegmentShare() {
+  const total = TOTAL[selectedYear];
+  const items = CATS
+    .map(cat => {
+      const value = cat.y[selectedYear];
+      return {
+        label: cat.label,
+        color: cat.color,
+        value,
+        share: value != null ? value / total * 100 : null,
+      };
+    })
+    .filter(item => item.value != null)
+    .sort((a, b) => b.value - a.value);
+  const title = document.getElementById('segment-share-title');
+  const totalEl = document.getElementById('segment-share-total');
+  title.textContent = `${displayYear(selectedYear)} 產值結構`;
+  totalEl.textContent = `總產值 ${total.toFixed(1)} 億元`;
+
+  if (!items.length) {
+    document.getElementById('segment-share-list').innerHTML =
+      '<div class="share-item">此年度未提供細項產值結構。</div>';
+    return;
+  }
+
+  const max = Math.max(...items.map(item => item.value));
+  document.getElementById('segment-share-list').innerHTML = items.map(item => {
+    const width = item.value / max * 100;
+    return `<div class="share-item">
+      <div class="share-line">
+        <span>${item.label}</span>
+        <span>${item.value.toFixed(1)}億 · ${item.share.toFixed(1)}%</span>
+      </div>
+      <div class="share-track" aria-hidden="true">
+        <div class="share-fill" style="width:${width.toFixed(1)}%; background:${item.color}"></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════════
@@ -628,7 +1315,7 @@ function renderTable() {
     }).join('');
     const vendor = isEF ? null : VENDORS[y];
     return `<tr class="${isEF ? 'ef-row' : ''}">
-      <th scope="row">${String(y).toUpperCase()}</th>
+      <th scope="row">${displayTableYear(y)}</th>
       <td>${totalVal != null ? totalVal.toFixed(2) : '—'}</td>
       ${catCells}
       <td class="${vendor == null ? 'na' : ''}">${vendor ?? '—'}</td>
