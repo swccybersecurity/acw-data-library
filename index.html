@@ -672,8 +672,15 @@
         <div>
           <h2>資安產業產值趨勢</h2>
           <p class="sec-note">
-            2016–2025 年實績，細項分類完整涵蓋 2017–2025 年。
+            註一 2016–2025 年為實績。<br>
+            註二 細項分類完整涵蓋 2017–2025 年。<br>
+            註三 可切換查看 2026 估計值與 2027 預測值。
           </p>
+        </div>
+        <div class="range-tabs" aria-label="趨勢圖時間範圍">
+          <button class="range-btn" type="button" data-range="actual" aria-pressed="true">實績 2016-2025</button>
+          <button class="range-btn" type="button" data-range="forecast2026" aria-pressed="false">含 2026 估計值</button>
+          <button class="range-btn" type="button" data-range="outlook2027" aria-pressed="false">含 2027 預測值</button>
         </div>
       </div>
 
@@ -694,6 +701,12 @@
               aria-label="臺灣資安產業產值趨勢圖，可點選年度查看右側產值結構"></canvas>
           </div>
           <ul class="legend" id="chart-legend" aria-label="圖例"></ul>
+          <div class="chart-note" role="note">
+            <span><span class="badge badge-act">實績</span> 已確認數值</span>
+            <span><span class="badge badge-est">e</span> 估計值（2026）</span>
+            <span><span class="badge badge-fct">f</span> 預測值（2027）</span>
+            <span>圖中數字單位為億元新台幣。</span>
+          </div>
         </div>
         <aside class="trend-aside" aria-label="趨勢摘要">
           <p class="share-title" id="segment-share-title">2025 產值結構</p>
@@ -702,6 +715,32 @@
         </aside>
       </div>
 
+      <button class="table-btn" id="table-toggle-btn"
+        aria-expanded="false" aria-controls="data-table-wrap"
+        onclick="toggleTable()">
+        ＋ 展開數據資料表（無障礙輔助）
+      </button>
+      <div id="data-table-wrap" class="table-wrap" hidden>
+        <table>
+          <caption>臺灣資安產業產值歷史資料（億元新台幣；廠商家數：家）</caption>
+          <thead>
+            <tr>
+              <th scope="col">年度</th>
+              <th scope="col">整體產值</th>
+              <th scope="col">終端與行動裝置防護</th>
+              <th scope="col">網路安全防護</th>
+              <th scope="col">資料與雲端應用安全</th>
+              <th scope="col">物聯網安全防護</th>
+              <th scope="col">資安營運管理服務</th>
+              <th scope="col">資安檢測鑑識顧問服務</th>
+              <th scope="col">資安系統整合建置服務</th>
+              <th scope="col">資安教育保險</th>
+              <th scope="col">廠商家數（家）</th>
+            </tr>
+          </thead>
+          <tbody id="data-tbody"></tbody>
+        </table>
+      </div>
     </div>
 
   </div>
@@ -958,15 +997,15 @@ const RANGE_CONFIG = {
   },
   forecast2026: {
     years: [...BASE_YEARS, '2026e'],
-    title: '2016-2026 台灣資安產業產值趨勢',
+    title: '2016-2026 台灣資安產業產值趨勢（含估計值）',
     measureYear: '2026e',
-    measureLabel: '2026 年預測值',
+    measureLabel: '2026 年估計值',
   },
   outlook2027: {
     years: [...BASE_YEARS, '2026e', '2027f'],
-    title: '2016-2027 台灣資安產業產值趨勢',
+    title: '2016-2027 台灣資安產業產值趨勢（含預測值）',
     measureYear: '2027f',
-    measureLabel: '2027 年展望值',
+    measureLabel: '2027 年預測值',
   },
 };
 let activeRange = 'actual';
@@ -984,8 +1023,8 @@ function displayYear(year) {
 }
 
 function displayTableYear(year) {
-  if (year === '2026e') return '2026 預測';
-  if (year === '2027f') return '2027 展望';
+  if (year === '2026e') return '2026 估計值';
+  if (year === '2027f') return '2027 預測值';
   return String(year);
 }
 
@@ -1055,7 +1094,7 @@ function initChart() {
             label: c => {
               if (c.raw == null) return null;
               const y = getYears()[c.dataIndex];
-              const prefix = typeof y === 'string' ? '預計產值' : '產值';
+              const prefix = y === '2026e' ? '估計值' : y === '2027f' ? '預測值' : '產值';
               return ` ${prefix}：${c.raw.toFixed(1)} 億元`;
             },
           },
@@ -1077,9 +1116,11 @@ function initChart() {
       },
     },
   });
+  setupRangeControls();
   updateTrendMeta();
   renderLegend();
   renderSegmentShare();
+  renderTable();
 }
 
 function renderLegend() {
@@ -1127,6 +1168,7 @@ function updateTrendChart() {
   updateTrendMeta();
   renderLegend();
   renderSegmentShare();
+  renderTable();
 }
 
 function renderSegmentShare() {
