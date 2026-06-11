@@ -1182,10 +1182,14 @@ function initChart() {
       plugins: {
         legend: { display: false },
         tooltip: {
+          filter: item => item.datasetIndex === 0,
           callbacks: {
-            label: c => c.raw != null
-              ? ` ${c.dataset.label}：${c.raw.toFixed(2)} 億元`
-              : null,
+            label: c => {
+              if (c.raw == null) return null;
+              const y = getYears()[c.dataIndex];
+              const prefix = typeof y === 'string' ? '預計產值' : '產值';
+              return ` ${prefix}：${c.raw.toFixed(1)} 億元`;
+            },
           },
         },
       },
