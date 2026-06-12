@@ -673,14 +673,8 @@
           <h2>資安產業產值趨勢</h2>
           <p class="sec-note">
             註一 2016–2025 年為實績。<br>
-            註二 細項分類完整涵蓋 2017–2025 年。<br>
-            註三 可切換查看 2026 估計值與 2027 預測值。
+            註二 細項分類完整涵蓋 2017–2025 年。
           </p>
-        </div>
-        <div class="range-tabs" aria-label="趨勢圖時間範圍">
-          <button class="range-btn" type="button" data-range="actual" aria-pressed="true">實績 2016-2025</button>
-          <button class="range-btn" type="button" data-range="forecast2026" aria-pressed="false">含 2026 估計值</button>
-          <button class="range-btn" type="button" data-range="outlook2027" aria-pressed="false">含 2027 預測值</button>
         </div>
       </div>
 
@@ -703,8 +697,6 @@
           <ul class="legend" id="chart-legend" aria-label="圖例"></ul>
           <div class="chart-note" role="note">
             <span><span class="badge badge-act">實績</span> 已確認數值</span>
-            <span><span class="badge badge-est">e</span> 估計值（2026）</span>
-            <span><span class="badge badge-fct">f</span> 預測值（2027）</span>
             <span>圖中數字單位為億元新台幣。</span>
           </div>
         </div>
@@ -826,35 +818,34 @@ const METRICS = [
 const CATS = [
   { label:'終端與行動裝置防護', color:'#F6B30B',
     y:{2017:84.76,2018:95.94,2019:108.26,2020:120.93,2021:131.05,2022:144.13,2023:151.91,2024:164.95,
-       2025:177.77,'2026e':194.65,'2027f':209.86}},
+       2025:177.77}},
   { label:'網路安全防護', color:'#4CAF50',
     y:{2017:115.94,2018:124.52,2019:139.55,2020:156.85,2021:172.43,2022:217.11,2023:229.05,2024:242.52,
-       2025:263.14,'2026e':281.56,'2027f':301.04}},
+       2025:263.14}},
   { label:'資料與雲端應用安全', color:'#E05A4B',
     y:{2017:23.59,2018:24.60,2019:26.51,2020:30.35,2021:31.61,2022:36.34,2023:38.74,2024:45.04,
-       2025:50.88,'2026e':57.49,'2027f':64.71}},
+       2025:50.88}},
   { label:'物聯網安全防護', color:'#C879C8',
     y:{2017:16.53,2018:18.12,2019:20.03,2020:22.27,2021:25.85,2022:33.59,2023:40.62,2024:50.64,
-       2025:62.62,'2026e':73.46,'2027f':84.71}},
+       2025:62.62}},
   { label:'資安營運管理服務', color:'#245B93',
     y:{2017:41.30,2018:45.00,2019:50.32,2020:58.02,2021:63.32,2022:69.63,2023:81.39,2024:93.49,
-       2025:107.31,'2026e':121.32,'2027f':136.26}},
+       2025:107.31}},
   { label:'資安檢測鑑識顧問服務', color:'#2E7D52',
     y:{2017:50.34,2018:54.99,2019:61.72,2020:69.50,2021:76.18,2022:78.16,2023:86.76,2024:98.45,
-       2025:110.56,'2026e':124.00,'2027f':138.61}},
+       2025:110.56}},
   { label:'資安系統整合建置服務', color:'#B5CE45',
     y:{2017:58.45,2018:73.52,2019:83.76,2020:90.41,2021:99.13,2022:104.49,2023:111.71,2024:117.93,
-       2025:134.72,'2026e':143.41,'2027f':156.04}},
+       2025:134.72}},
   { label:'資安教育保險', color:'#7E4A24',
     y:{2017:2.63,2018:2.75,2019:3.30,2020:3.68,2021:3.98,2022:4.83,2023:5.14,2024:5.27,
-       2025:5.40,'2026e':5.58,'2027f':5.89}},
+       2025:5.40}},
 ];
 
 const TOTAL = {
   2016:351.76,2017:393.54,2018:439.44,2019:493.45,
   2020:552.01,2021:603.55,2022:688.28,2023:745.35,
-  2024:818.33,2025:912.40,
-  '2026e':1001.47,'2027f':1097.12
+  2024:818.33,2025:912.40
 };
 const VENDORS = {
   2016:196,2017:294,2018:303,2019:324,2020:340,
@@ -995,18 +986,6 @@ const RANGE_CONFIG = {
     measureYear: 2025,
     measureLabel: '2025 年實績',
   },
-  forecast2026: {
-    years: [...BASE_YEARS, '2026e'],
-    title: '2016-2026 台灣資安產業產值趨勢（含估計值）',
-    measureYear: '2026e',
-    measureLabel: '2026 年估計值',
-  },
-  outlook2027: {
-    years: [...BASE_YEARS, '2026e', '2027f'],
-    title: '2016-2027 台灣資安產業產值趨勢（含預測值）',
-    measureYear: '2027f',
-    measureLabel: '2027 年預測值',
-  },
 };
 let activeRange = 'actual';
 let selectedYear = 2025;
@@ -1017,14 +996,10 @@ function getYears() {
 }
 
 function displayYear(year) {
-  if (year === '2026e') return '2026';
-  if (year === '2027f') return '2027';
   return String(year);
 }
 
 function displayTableYear(year) {
-  if (year === '2026e') return '2026 估計值';
-  if (year === '2027f') return '2027 預測值';
   return String(year);
 }
 
@@ -1093,9 +1068,7 @@ function initChart() {
           callbacks: {
             label: c => {
               if (c.raw == null) return null;
-              const y = getYears()[c.dataIndex];
-              const prefix = y === '2026e' ? '估計值' : y === '2027f' ? '預測值' : '產值';
-              return ` ${prefix}：${c.raw.toFixed(1)} 億元`;
+              return ` 產值：${c.raw.toFixed(1)} 億元`;
             },
           },
         },
