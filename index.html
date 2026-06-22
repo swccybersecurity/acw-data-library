@@ -34,7 +34,7 @@
       margin: 0;
       font-family: "Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
       color: var(--ink); background: var(--paper);
-      font-size: 15px; line-height: 1.55;
+      font-size: 0.9375rem; line-height: 1.55;
     }
     a { color: inherit; text-decoration: none; }
     :focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
@@ -235,13 +235,14 @@
     /* ── Card grid ── */
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 18px;
       padding: 4px 0 48px;
     }
 
     .metric-card {
       --card-accent: var(--teal-dark);
+      container-type: inline-size;
       position: relative;
       overflow: hidden;
       background: #fff;
@@ -265,6 +266,14 @@
       box-shadow: 0 10px 22px rgba(23,63,95,0.14);
     }
     .metric-card:focus-within { outline: 3px solid var(--teal); }
+
+    /* 卡片在窄容器內自動疊排，避免文字破版 */
+    @container (max-width: 230px) {
+      .card-foot {
+        grid-template-columns: 1fr;
+      }
+      .card-spark, .card-spark-label { display: none; }
+    }
 
     .card-head {
       min-height: 66px;
@@ -384,6 +393,8 @@
       font-size: 12px;
       font-weight: 700;
       line-height: 1.35;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .card-context strong {
       color: #183d4a;
@@ -549,20 +560,46 @@
     .badge-fct { border-color: #245b93; color: #245b93; border-style: dotted; }
 
     /* Data table */
-    .table-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 14px; padding: 6px 12px;
-      background: transparent; border: 1px solid var(--line);
-      color: var(--muted); font-size: 13px; font-family: inherit; cursor: pointer;
+    .data-table-section {
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(23,49,58,0.08);
     }
-    .table-btn:hover { border-color: var(--teal); color: var(--teal); }
-    .table-wrap { margin-top: 10px; overflow-x: auto; }
-    .table-wrap[hidden] { display: none; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 780px; }
-    th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--line); }
-    th { font-weight: 700; background: #f0f6fa; }
-    th:first-child, td:first-child { text-align: left; }
-    tr:hover td { background: #f7fbfa; }
+    .data-table-heading {
+      margin: 0 0 14px;
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      font-weight: 900;
+      color: var(--navy);
+    }
+    .table-wrap { overflow-x: auto; border: 1px solid #d0e0e8; border-radius: 0; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.8125rem; min-width: 820px;
+    }
+    caption {
+      caption-side: bottom;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: left;
+      border-top: 1px solid var(--line);
+    }
+    thead tr { background: var(--teal-dark); }
+    thead th {
+      padding: 10px 11px;
+      font-weight: 700;
+      color: #fff;
+      border-bottom: 0;
+      text-align: right;
+      white-space: nowrap;
+    }
+    thead th:first-child { text-align: left; }
+    tbody td, tbody th { padding: 8px 11px; text-align: right; border-bottom: 1px solid var(--line); }
+    tbody th { font-weight: 700; text-align: left; color: var(--ink); }
+    tbody tr:nth-child(even) td,
+    tbody tr:nth-child(even) th { background: #f4f9fb; }
+    tbody tr:hover td,
+    tbody tr:hover th { background: #e8f3f8; }
     .ef-row td, .ef-row th { color: var(--teal-dark); font-style: italic; }
     .na { color: #bbb; }
 
@@ -622,7 +659,6 @@
 
     /* Responsive */
     @media (max-width: 900px) {
-      .card-grid { grid-template-columns: repeat(2, 1fr); }
       .metric-card { min-height: 208px; }
       .trend-board { grid-template-columns: 1fr; }
       .trend-main { border-right: 0; border-bottom: 1px solid #dce9ef; }
@@ -636,7 +672,6 @@
       .brand-title { font-size: 17px; }
       .sub-tabs { width: 100%; overflow-x: auto; }
       .sub-tabs a { min-width: 112px; }
-      .card-grid { grid-template-columns: 1fr; gap: 14px; }
       .metric-card { min-height: auto; }
       .card-head,
       .card-body,
@@ -694,29 +729,22 @@
           </div>
           <div class="chart-canvas-wrap">
             <canvas id="trendChart" role="img" tabindex="0"
-              aria-label="臺灣資安產業產值趨勢圖，目前選取 2025 年，可用左右方向鍵切換年份查看右側產值結構"></canvas>
+              aria-label="臺灣資安產業 2016 至 2025 年產值趨勢長條圖，可用左右方向鍵在各年份間切換"></canvas>
           </div>
-          <ul class="legend" id="chart-legend" aria-label="圖例"></ul>
-          <div class="chart-note" role="note">
-            <span><span class="badge badge-act">實績</span> 已確認數值</span>
-            <span>圖中數字單位為億元新台幣。</span>
-          </div>
+          <p class="chart-note" role="note">圖中數字單位為億元新台幣，2016–2025 年均為實績值。</p>
         </div>
-        <aside class="trend-aside" aria-label="趨勢摘要">
+        <aside class="trend-aside" aria-label="2025 年產值結構（各細項佔比）">
           <h3 class="share-title" id="segment-share-title">2025 產值結構</h3>
           <p class="share-total" id="segment-share-total">總產值 912.4 億元</p>
           <div class="share-list" id="segment-share-list"></div>
         </aside>
       </div>
 
-      <button class="table-btn" id="table-toggle-btn"
-        aria-expanded="false" aria-controls="data-table-wrap"
-        onclick="toggleTable()">
-        ＋ 展開數據資料表（無障礙輔助）
-      </button>
-      <div id="data-table-wrap" class="table-wrap" hidden>
+      <div class="data-table-section">
+        <h3 class="data-table-heading">歷年產值資料表</h3>
+      <div id="data-table-wrap" class="table-wrap">
         <table>
-          <caption>臺灣資安產業產值歷史資料（億元新台幣；廠商家數：家）</caption>
+          <caption>單位：億元新台幣；廠商家數：家。2016–2025 年為實績，細項分類完整涵蓋 2017–2025 年。</caption>
           <thead>
             <tr>
               <th scope="col">年度</th>
@@ -734,6 +762,7 @@
           </thead>
           <tbody id="data-tbody"></tbody>
         </table>
+      </div>
       </div>
     </div>
 
@@ -861,7 +890,7 @@ const BASE_YEARS = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
 // ═══════════════════════════════════════════════
 
 function makeSpark(data, accent = '#145ba3') {
-  const W = 78, H = 34, BAR_W = 6, GAP = 2;
+  const W = 64, H = 30, BAR_W = 5, GAP = 2;
   const n = data.length;
   const min = 0;
   const max = Math.max(...data);
@@ -902,7 +931,7 @@ const TOTAL_2025_METRIC_VALUE = METRICS[0].val25;
 function formatBaseline(m) {
   return m.unit === '家'
     ? `${m.val24.toLocaleString('zh-TW')} 家`
-    : `${m.val24.toLocaleString('zh-TW')} 百萬元`;
+    : `${m.val24.toLocaleString('zh-TW')} 百萬`;
 }
 
 function metricContextLine(m, idx) {
@@ -965,7 +994,7 @@ function renderCards() {
       </div>
       <div class="card-foot">
         <div class="card-context">
-          <span>2024 基準 <strong>${formatBaseline(m)}</strong></span>
+          <span>基準 <strong>${formatBaseline(m)}</strong></span>
           <span>${metricContextLine(m, idx)}</span>
         </div>
         <div>
@@ -1058,11 +1087,6 @@ function initChart() {
     options: {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
-      onClick: (_, elements) => {
-        if (!elements.length) return;
-        selectedYear = getYears()[elements[0].index];
-        updateTrendChart();
-      },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -1091,26 +1115,9 @@ function initChart() {
       },
     },
   });
-  setupRangeControls();
   updateTrendMeta();
-  renderLegend();
   renderSegmentShare();
   renderTable();
-
-  const canvasEl = document.getElementById('trendChart');
-  canvasEl.addEventListener('keydown', (e) => {
-    const years = getYears();
-    const idx = years.indexOf(selectedYear);
-    if (e.key === 'ArrowRight' && idx < years.length - 1) {
-      selectedYear = years[idx + 1];
-      updateTrendChart();
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft' && idx > 0) {
-      selectedYear = years[idx - 1];
-      updateTrendChart();
-      e.preventDefault();
-    }
-  });
 }
 
 function renderLegend() {
@@ -1156,20 +1163,14 @@ function updateTrendChart() {
   trendChart.options.scales.y.suggestedMax = getSuggestedMax(years);
   trendChart.update();
   updateTrendMeta();
-  renderLegend();
-  renderSegmentShare();
-  renderTable();
-  document.getElementById('trendChart').setAttribute(
-    'aria-label',
-    `臺灣資安產業產值趨勢圖，目前選取 ${selectedYear} 年，可用左右方向鍵切換年份查看右側產值結構`
-  );
 }
 
 function renderSegmentShare() {
-  const total = TOTAL[selectedYear];
+  const fixedYear = 2025;
+  const total = TOTAL[fixedYear];
   const items = CATS
     .map(cat => {
-      const value = cat.y[selectedYear];
+      const value = cat.y[fixedYear];
       return {
         label: cat.label,
         color: cat.color,
@@ -1181,7 +1182,7 @@ function renderSegmentShare() {
     .sort((a, b) => b.value - a.value);
   const title = document.getElementById('segment-share-title');
   const totalEl = document.getElementById('segment-share-total');
-  title.textContent = `${displayYear(selectedYear)} 產值結構`;
+  title.textContent = `${fixedYear} 產值結構`;
   totalEl.textContent = `總產值 ${total.toFixed(1)} 億元`;
 
   if (!items.length) {
@@ -1228,16 +1229,24 @@ function renderTable() {
   }).join('');
 }
 
-function toggleTable() {
-  const btn = document.getElementById('table-toggle-btn');
-  const wrap = document.getElementById('data-table-wrap');
-  const expanded = btn.getAttribute('aria-expanded') === 'true';
-  btn.setAttribute('aria-expanded', String(!expanded));
-  btn.textContent = expanded
-    ? '＋ 展開數據資料表（無障礙輔助）'
-    : '－ 收合數據資料表';
-  wrap.hidden = expanded;
-}
+// ═══════════════════════════════════════════════
+//  字體切換連動（Issue 3）
+//  ACW 母版頁的 A-/A/A+ 按鈕若更動 html 或 body 的
+//  font-size style/class，此處自動等比縮放本頁文字。
+//  工程師也可改呼叫 syncFontToParent(newPx) 主動帶值。
+// ═══════════════════════════════════════════════
+(function () {
+  const BASE_PX = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  function syncFontToParent() {
+    const current = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    if (Math.abs(current - BASE_PX) > 0.5) {
+      document.body.style.fontSize = (0.9375 * current / BASE_PX).toFixed(4) + 'rem';
+    }
+  }
+  const obs = new MutationObserver(syncFontToParent);
+  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+  obs.observe(document.body,            { attributes: true, attributeFilter: ['style', 'class'] });
+})();
 
 // ═══════════════════════════════════════════════
 //  啟動
