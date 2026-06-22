@@ -8,7 +8,7 @@
   <style>
     :root {
       --ink:       #12313a;
-      --muted:     #617985;
+      --muted:     #506470;
       --line:      #cfe0e7;
       --paper:     #eef7fb;
       --panel:     #ffffff;
@@ -282,7 +282,7 @@
       min-width: 0;
     }
     .card-index {
-      color: var(--card-accent);
+      color: #3a5460;
       font-size: 11px;
       font-weight: 900;
       line-height: 1;
@@ -390,7 +390,7 @@
       font-weight: 900;
     }
     .card-spark-label {
-      color: #78909a;
+      color: #4a6270;
       font-size: 11px;
       font-weight: 800;
       text-align: right;
@@ -650,6 +650,7 @@
   </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">跳到主要內容</a>
 
 <main id="main-content" class="content-shell">
   <div class="container">
@@ -682,7 +683,7 @@
         <div class="trend-main">
           <div class="chart-title-row">
             <div>
-              <p class="eyebrow">Market Trend</p>
+              <p class="eyebrow" lang="en">Market Trend</p>
               <h3 id="trend-chart-title">2016-2025 台灣資安產業產值趨勢</h3>
             </div>
             <div class="chart-measure">
@@ -691,8 +692,8 @@
             </div>
           </div>
           <div class="chart-canvas-wrap">
-            <canvas id="trendChart" role="img"
-              aria-label="臺灣資安產業產值趨勢圖，可點選年度查看右側產值結構"></canvas>
+            <canvas id="trendChart" role="img" tabindex="0"
+              aria-label="臺灣資安產業產值趨勢圖，目前選取 2025 年，可用左右方向鍵切換年份查看右側產值結構"></canvas>
           </div>
           <ul class="legend" id="chart-legend" aria-label="圖例"></ul>
           <div class="chart-note" role="note">
@@ -1094,6 +1095,21 @@ function initChart() {
   renderLegend();
   renderSegmentShare();
   renderTable();
+
+  const canvasEl = document.getElementById('trendChart');
+  canvasEl.addEventListener('keydown', (e) => {
+    const years = getYears();
+    const idx = years.indexOf(selectedYear);
+    if (e.key === 'ArrowRight' && idx < years.length - 1) {
+      selectedYear = years[idx + 1];
+      updateTrendChart();
+      e.preventDefault();
+    } else if (e.key === 'ArrowLeft' && idx > 0) {
+      selectedYear = years[idx - 1];
+      updateTrendChart();
+      e.preventDefault();
+    }
+  });
 }
 
 function renderLegend() {
@@ -1142,6 +1158,10 @@ function updateTrendChart() {
   renderLegend();
   renderSegmentShare();
   renderTable();
+  document.getElementById('trendChart').setAttribute(
+    'aria-label',
+    `臺灣資安產業產值趨勢圖，目前選取 ${selectedYear} 年，可用左右方向鍵切換年份查看右側產值結構`
+  );
 }
 
 function renderSegmentShare() {
