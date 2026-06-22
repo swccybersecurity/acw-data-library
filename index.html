@@ -931,7 +931,7 @@ function renderCards() {
     const badge = idx < 2 ? '總覽' : '細項產值';
     const metricNo = String(idx + 1).padStart(2, '0');
 
-    return `<article class="metric-card" style="--card-accent:${accent}" role="listitem" aria-labelledby="${cardId}-title">
+    return `<div class="metric-card" style="--card-accent:${accent}" role="listitem" aria-labelledby="${cardId}-title">
       <div class="card-head">
         <div class="card-kicker-row">
           <span class="card-index">指標 ${metricNo}</span>
@@ -946,19 +946,19 @@ function renderCards() {
         </div>
         <div class="card-main">
           <div>
-            <div class="card-value" aria-label="${fmtVal} ${m.unit}">
+            <div class="card-value" role="text" aria-label="${fmtVal} ${m.unit}">
               ${fmtVal}
             </div>
             <div class="card-unit">${m.unit}</div>
           </div>
 
-          <div class="card-growth-wrap"
+          <div class="card-growth-wrap" role="text"
             aria-label="年增率 ${growth >= 0 ? '＋' : ''}${growthStr}%，相較2024年">
-            <div class="card-growth">
-              <span class="arrow" aria-hidden="true">${growth >= 0 ? '▲' : '▼'}</span>
+            <div class="card-growth" aria-hidden="true">
+              <span class="arrow">${growth >= 0 ? '▲' : '▼'}</span>
               <span>${growth >= 0 ? '+' : ''}${growthStr}%</span>
             </div>
-            <div class="card-compare">相較 2024</div>
+            <div class="card-compare" aria-hidden="true">相較 2024</div>
           </div>
         </div>
       </div>
@@ -972,7 +972,7 @@ function renderCards() {
           <div class="card-spark" aria-hidden="true">${spark}</div>
         </div>
       </div>
-    </article>`;
+    </div>`;
   }).join('');
 }
 
